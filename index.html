@@ -1,22 +1,57 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <title>A-Frame Cursor Teleport Component - Basic</title>
+    <meta name="description" content="Basic example for Cursor Teleport component."></meta>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-cursor-teleport@1.6.0/dist/aframe-cursor-teleport-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
   </head>
   <body>
-    <a-scene>
-        <a-assets>
-            <a-asset-item id="Model" src="scene1.glb"></a-asset-item>
-          </a-assets>
-          <a-entity 
-          id="model" 
-          gltf-model="#Model" 
-          scale="3 3 3" 
-          rotation="0 -90 0"
-          position="0 -5 0"
-          shadow="receive: false">
-        </a-entity>
+    <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable" renderer="colorManagement: true;">
+      <a-assets>
+        <a-asset-item id="Model" src="scene2.glb"></a-asset-item>
+        <a-asset-item id="Floor" src="floor.glb"></a-asset-item>
+      </a-assets>
 
-      <a-sky color="#ECECEC"></a-sky>
+      <a-entity 
+      id="model" 
+      gltf-model="#Model" 
+      scale="1 1 1" 
+      rotation="0 -90 0"
+      position="3 0 0"
+      shadow="receive: false"
+      class="collision">
+    </a-entity>
+
+      <!-- player -->
+      <a-entity id="cameraRig" position="0 0 0" cursor-teleport="cameraRig: #cameraRig; cameraHead: #head; collisionEntities: .collision; ignoreEntities: .clickable">
+        <a-entity id="head" position="0 3 0" camera wasd-controls="acceleration:20" look-controls="reverseMouseDrag: true"></a-entity>
+        <a-entity
+          laser-controls="hand: left"
+          raycaster="objects: .clickable; far: 100"
+          line="color: red; opacity: 0.75"
+          blink-controls="
+            collisionEntities: .collision;
+            cameraRig: #cameraRig;
+            teleportOrigin: #head;
+            curveShootingSpeed: 6"></a-entity>
+        <a-entity
+          laser-controls="hand: right"
+          raycaster="objects: .clickable"
+          line="color: red; opacity: 0.75"
+          blink-controls="
+            collisionEntities: .collision;
+            cameraRig: #cameraRig;
+            teleportOrigin: #head;
+            curveShootingSpeed: 6"></a-entity>
+      </a-entity>
+
+      <!-- scene geometry -->
+      <!-- <a-entity class="collision" position="0 0 0" rotation="-90 0 0" geometry="primitive: plane; width: 8; height: 8" material="color: #ffcc80"></a-entity> -->
+      <a-sky color="#e1f5fe"></a-sky>
+
     </a-scene>
   </body>
 </html>
