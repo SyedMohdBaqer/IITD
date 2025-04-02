@@ -52,6 +52,16 @@
             z: currentPosition.z + dz
           });
         });
+
+        // Disable conflicting components
+        document.getElementById('cameraRig').removeAttribute('cursor-teleport');
+        document.getElementById('head').removeAttribute('wasd-controls');
+        document.getElementById('head').removeAttribute('look-controls');
+        var laserControllers = document.querySelectorAll('[laser-controls]');
+        laserControllers.forEach(function (laserController) {
+          laserController.removeAttribute('raycaster');
+          laserController.removeAttribute('blink-controls');
+        });
       } else {
         // Retain default controls for non-mobile devices
         console.log("Non-mobile device detected.");
