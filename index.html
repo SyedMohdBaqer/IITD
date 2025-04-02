@@ -3,35 +3,61 @@
   <head>
     <meta charset="utf-8">
     <title>IIT Delhi Demo</title>
-    <meta name="description" content="Basic example for Cursor Teleport component."></meta>
+    <meta name="description" content="Mobile joystick implementation for A-Frame.">
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-cursor-teleport@1.6.0/dist/aframe-cursor-teleport-component.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/nipplejs@0.8.3/dist/nipplejs.min.js"></script>
-
+    <style>
+      #joystick {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        width: 100px;
+        height: 100px;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      }
+    </style>
   </head>
   <body>
-    <div id="joystick"></div>
-<script>
-  var joystick = nipplejs.create({
-    zone: document.getElementById('joystick'),
-    mode: 'dynamic',
-    position: { left: '50%', top: '50%' },
-    size: 100,
-  });
+    <!-- Joystick Div -->
+    <div id="joystick" style="display: none;"></div>
 
-  joystick.on('move', function (evt, data) {
-    var dx = data.vector.x * 0.1;
-    var dz = data.vector.y * 0.1;
-    var cameraRig = document.getElementById('cameraRig');
-    var currentPosition = cameraRig.getAttribute('position');
-    cameraRig.setAttribute('position', {
-      x: currentPosition.x + dx,
-      y: currentPosition.y,
-      z: currentPosition.z + dz
-    });
-  });
-</script>
+    <script>
+      // Function to check if the device is mobile
+      function isMobileDevice() {
+        return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+      }
+
+      if (isMobileDevice()) {
+        // Enable joystick
+        document.getElementById('joystick').style.display = 'block';
+
+        var joystick = nipplejs.create({
+          zone: document.getElementById('joystick'),
+          mode: 'dynamic',
+          position: { left: '50%', top: '50%' },
+          size: 100,
+        });
+
+        joystick.on('move', function (evt, data) {
+          var dx = data.vector.x * 0.1;
+          var dz = data.vector.y * 0.1;
+          var cameraRig = document.getElementById('cameraRig');
+          var currentPosition = cameraRig.getAttribute('position');
+          cameraRig.setAttribute('position', {
+            x: currentPosition.x + dx,
+            y: currentPosition.y,
+            z: currentPosition.z + dz
+          });
+        });
+      } else {
+        // Retain default controls for non-mobile devices
+        console.log("Non-mobile device detected.");
+      }
+    </script>
+
     <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable" renderer="colorManagement: true;">
       <a-assets>
         <a-asset-item id="Model" src="scene2.glb"></a-asset-item>
@@ -39,14 +65,14 @@
       </a-assets>
 
       <a-entity 
-      id="model" 
-      gltf-model="#Model" 
-      scale="0.5 0.5 0.5" 
-      rotation="0 -90 0"
-      position="2 0 0"
-      shadow="receive: false"
-      class="collision">
-    </a-entity>
+        id="model" 
+        gltf-model="#Model" 
+        scale="0.5 0.5 0.5" 
+        rotation="0 -90 0"
+        position="2 0 0"
+        shadow="receive: false"
+        class="collision">
+      </a-entity>
 
       <!-- player -->
       <a-entity id="cameraRig" position="0 0 0" cursor-teleport="cameraRig: #cameraRig; cameraHead: #head; collisionEntities: .collision; ignoreEntities: .clickable; cursorType:ring">
@@ -71,10 +97,7 @@
             curveShootingSpeed: 6"></a-entity>
       </a-entity>
 
-      <!-- scene geometry -->
-      <!-- <a-entity class="collision" position="0 0 0" rotation="-90 0 0" geometry="primitive: plane; width: 8; height: 8" material="color: #ffcc80"></a-entity> -->
       <a-sky color="#e1f5fe"></a-sky>
-
     </a-scene>
   </body>
 </html>
