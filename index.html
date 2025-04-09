@@ -13,6 +13,9 @@
       <a-assets>
         <a-asset-item id="Model" src="scene2.glb"></a-asset-item>
         <a-asset-item id="Floor" src="floor.glb"></a-asset-item>
+        <a-asset-item id="PanelBaseModel" src="hotspot base.glb"></a-asset-item>
+        <a-asset-item id="PanelRingModel" src="hotspot rings.glb"></a-asset-item>
+        <a-asset-item id="PanelModel" src="panel.glb"></a-asset-item>
       </a-assets>
 
       <a-entity 
@@ -22,8 +25,44 @@
       rotation="0 -90 0"
       position="2 0 0"
       shadow="receive: false"
-      class="collision">
-    </a-entity>
+      class="collision"></a-entity>
+
+    <a-entity 
+    id="PanelBase" 
+    gltf-model="#PanelBaseModel" 
+    scale="0.030 0.030 0.030" 
+    rotation="0 -90 0"
+    position="4.6 0.8 0.25"
+    shadow="receive: false"
+    class="clickable">    </a-entity>
+
+
+    <a-entity 
+    id="PanelRing" 
+    gltf-model="#PanelRingModel" 
+    scale="0.030 0.030 0.030" 
+    rotation="0 -90 0"
+    position="4.6 0.8 0.25"
+    shadow="receive: false"
+    animation__scale="property: scale; to: 0 0 0; dur: 1000; easing: easeOutElastic; enabled: false"></a-entity>
+
+
+    <a-entity 
+    id="Panel" 
+    gltf-model="#PanelModel" 
+    scale="0 0 0" 
+    rotation="0 -90 0"
+    position="4.5 -0.2 -0.15"
+    shadow="receive: false"
+    animation__scale="property: scale; 
+                          to: 0.55 0.55 0.55; 
+                          dur: 2000; 
+                          easing: easeOutElastic;
+                          keyframes: 0.55 0.55 0.55 0.5 0.5 0.5; 
+                          keyframes_durations: 2000 2000; 
+                          enabled: false"
+    >
+  </a-entity>
 
       <!-- player -->
       <a-entity id="cameraRig" position="0 0 0" cursor-teleport="cameraRig: #cameraRig; cameraHead: #head; collisionEntities: .collision; ignoreEntities: .clickable; cursorType:ring">
@@ -53,5 +92,21 @@
       <a-sky color="#e1f5fe"></a-sky>
 
     </a-scene>
+
+    <script>
+      // Select PanelBase and Panel entities
+      const panelBase = document.querySelector('#PanelBase');
+      const panel = document.querySelector('#Panel');
+      const panelRing = document.querySelector('#PanelRing');
+
+      // Add a click event listener to PanelBase
+      panelBase.addEventListener('click', () => {
+        // Trigger the animation for Panel to scale to 0.5 0.5 0.5
+        panel.setAttribute('animation__scale', 'enabled', true);
+        
+        // Trigger the animation for PanelRing to scale to 0 0 0
+        panelRing.setAttribute('animation__scale', 'enabled', true);
+      });
+    </script>
   </body>
 </html>
